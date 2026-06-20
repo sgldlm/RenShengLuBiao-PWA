@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta
+      name="description"
+      content="人生路标：记录时间，洞察人生。看看自己已经走了多远，也给未来一点温柔的坐标。"
+    />
+    <meta name="theme-color" content="#d9cfbd" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="人生路标" />
+    <title>人生路标</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="styles.css?v=40" />
+  </head>
+  <body class="theme-light">
+    <div class="app-background" aria-hidden="true">
+      <div class="grain"></div>
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+    </div>
+
+    <main id="home-screen" class="home-screen">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <span class="brand-symbol">路</span>
+          <span class="brand-copy">人生路标</span>
+        </div>
+        <div class="top-actions">
+          <button id="install-app-button" class="install-button" type="button" hidden>
+            安装
+          </button>
+          <div class="live-mark" aria-label="时间正在运行">
+            <span></span>
+            LIVE
+          </div>
+        </div>
+      </header>
+
+      <section class="time-stage" aria-label="当前时间与今日进度">
+        <div class="orbit-message orbit-message-top">
+          <span>人生路标</span>
+          <strong>每一天 / 都值得被看见</strong>
+        </div>
+
+        <div class="time-orbit">
+          <svg class="progress-rings" viewBox="0 0 360 360" aria-hidden="true">
+            <g id="clock-ticks" class="clock-ticks"></g>
+            <circle class="ring-grid ring-grid-a" cx="180" cy="180" r="162" pathLength="100" />
+            <circle class="ring-grid ring-grid-b" cx="180" cy="180" r="145" pathLength="100" />
+            <circle class="ring-grid ring-grid-c" cx="180" cy="180" r="117" pathLength="100" />
+            <circle
+              id="day-progress-ring"
+              class="day-progress-ring"
+              cx="180"
+              cy="180"
+              r="162"
+              pathLength="100"
+            />
+          </svg>
+          <div class="orbit-sweep" aria-hidden="true"></div>
+          <div id="progress-dot" class="progress-dot" aria-hidden="true"></div>
+
+          <div class="clock-face">
+            <p id="weekday-label" class="clock-weekday">星期日</p>
+            <p id="machine-date" class="clock-date">0000年00月00日</p>
+            <strong id="machine-time" class="clock-time">00:00:00</strong>
+            <div class="clock-meta">
+              <span>今日已过 <b id="day-progress-text">0.00%</b></span>
+            </div>
+          </div>
+
+          <span class="ring-label ring-label-12">12</span>
+          <span class="ring-label ring-label-3">3</span>
+          <span class="ring-label ring-label-6">6</span>
+          <span class="ring-label ring-label-9">9</span>
+        </div>
+
+        <div class="orbit-message orbit-message-bottom">
+          <p>永远年轻 / 永远热泪盈眶</p>
+          <span id="home-life-days">输入生日，看看自己已经走了多远</span>
+        </div>
+      </section>
+
+      <section class="launch-panel" aria-labelledby="launch-title">
+        <div class="launch-heading">
+          <div>
+            <h1 id="launch-title">人生大事（小六壬）</h1>
+            <p class="launch-subtitle">记录时间，洞察人生</p>
+          </div>
+          <button class="launch-button" type="submit" form="birthday-form">
+            <span>开始</span>
+            <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+
+        <form id="birthday-form" novalidate>
+          <div class="birth-profile-grid">
+            <label class="profile-field profile-name-field" for="birth-name">
+              <span class="sr-only">名字</span>
+              <input id="birth-name" name="birth-name" type="text" maxlength="12" placeholder="名字" />
+            </label>
+            <label class="profile-field" for="calendar-type">
+              <span class="sr-only">生日类型</span>
+              <select id="calendar-type" name="calendar-type">
+                <option value="solar">阳历</option>
+                <option value="lunar">阴历/农历</option>
+                <option value="lunarLeap">阴历闰月</option>
+              </select>
+            </label>
+            <label class="profile-field" for="birth-gender">
+              <span>性别</span>
+              <select id="birth-gender" name="birth-gender">
+                <option value=""></option>
+                <option value="male">男</option>
+                <option value="female">女</option>
+              </select>
+            </label>
+            <label class="profile-field" for="birth-place">
+              <span>出生地</span>
+              <input id="birth-place" name="birth-place" type="text" maxlength="18" placeholder="" />
+            </label>
+          </div>
+          <div class="birth-coordinate">
+            <label class="birth-field" for="birthday">
+              <span id="birthday-label">出生日期</span>
+              <input
+                id="birthday"
+                name="birthday"
+                type="date"
+                required
+                aria-describedby="date-error"
+              />
+            </label>
+            <label class="birth-field birth-hour-field" for="birth-hour">
+              <span>出生时辰</span>
+              <select id="birth-hour" name="birth-hour">
+                <option value="">未知</option>
+                <option value="0">子时 23–01</option>
+                <option value="1">丑时 01–03</option>
+                <option value="2">寅时 03–05</option>
+                <option value="3">卯时 05–07</option>
+                <option value="4">辰时 07–09</option>
+                <option value="5">巳时 09–11</option>
+                <option value="6">午时 11–13</option>
+                <option value="7">未时 13–15</option>
+                <option value="8">申时 15–17</option>
+                <option value="9">酉时 17–19</option>
+                <option value="10">戌时 19–21</option>
+                <option value="11">亥时 21–23</option>
+              </select>
+            </label>
+          </div>
+          <p id="calendar-conversion-note" class="calendar-conversion-note">
+            选择阳历或阴历后，这里会自动显示对应日期。
+          </p>
+          <p id="date-error" class="error-message" role="alert"></p>
+        </form>
+
+        <p class="privacy-note">
+          <span></span>
+          资料仅保存在本机；生日、时辰、性别与出生地用于生成你的本机人生路标
+        </p>
+      </section>
+    </main>
+
+    <section id="insight-screen" class="insight-screen" aria-label="人生路标结果" hidden>
+      <header class="insight-header">
+        <button id="back-button" class="back-button" type="button" aria-label="返回">
+          返回
+        </button>
+        <div class="insight-title">
+          <span>人生路标</span>
+          <strong>人生坐标系统</strong>
+        </div>
+        <div class="insight-actions" aria-hidden="true"></div>
+      </header>
+
+      <div class="insight-scroll">
+        <section class="life-hero">
+          <p class="life-lead">你已经来到这个世界</p>
+          <div class="life-days">
+            <strong id="total-days">0</strong>
+          </div>
+          <p id="life-detail" class="life-detail">0年 0个月 0天</p>
+
+          <div class="life-strip">
+            <div>
+              <span>出发</span>
+              <strong id="arrival-date">--</strong>
+            </div>
+            <div>
+              <span>下一站生日</span>
+              <strong id="next-birthday">--</strong>
+            </div>
+            <div>
+              <span>已走过小时</span>
+              <strong id="total-hours">0</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="date-console" aria-labelledby="date-console-title">
+          <div class="console-heading">
+            <div>
+              <h2 id="date-console-title">查看我的人生</h2>
+            </div>
+            <span id="culture-score" class="culture-score" title="人生大事（小六壬）与人生路标（梅花易数）协调后的当下幸运值">--</span>
+          </div>
+          <div class="date-controls">
+            <label>
+              <span>日期</span>
+              <input id="target-date" type="date" />
+            </label>
+            <label>
+              <span>时辰</span>
+              <select id="target-hour">
+                <option value="0">子时 23–01</option>
+                <option value="1">丑时 01–03</option>
+                <option value="2">寅时 03–05</option>
+                <option value="3">卯时 05–07</option>
+                <option value="4">辰时 07–09</option>
+                <option value="5">巳时 09–11</option>
+                <option value="6">午时 11–13</option>
+                <option value="7">未时 13–15</option>
+                <option value="8">申时 15–17</option>
+                <option value="9">酉时 17–19</option>
+                <option value="10">戌时 19–21</option>
+                <option value="11">亥时 21–23</option>
+              </select>
+            </label>
+          </div>
+          <div class="commerce-strip">
+            <button id="open-commerce-button" class="commerce-entry-button" type="button">
+              <strong id="commerce-status-label">开通人生路标</strong>
+              <small>微信扫码 · 手机号留言 · 短信验证码</small>
+            </button>
+          </div>
+          <div id="commerce-panel" class="commerce-panel" aria-label="扫码付费与验证码区域" tabindex="0" hidden>
+            <div class="commerce-panel-heading">
+              <span class="card-label">扫码付费</span>
+              <strong id="commerce-title">解锁超值完整版9.9元</strong>
+              <p id="commerce-detail">填写手机号后扫码付款，付款留言必须写这个手机号；我根据留言手机号生成短信验证码发给你。</p>
+              <button id="close-commerce-panel-button" class="commerce-panel-close" type="button">收起</button>
+            </div>
+            <div class="payment-methods" aria-label="选择收款码">
+              <button id="open-qr-modal-button" class="payment-qr" type="button" data-payment-method="wechat" aria-label="放大查看微信付款二维码">
+                <span class="payment-qr-frame">
+                  <img id="wechat-qr-image" alt="微信付款二维码" hidden />
+                  <span id="wechat-qr-placeholder">微信</span>
+                </span>
+                <strong>微信付款</strong>
+              </button>
+              <button id="open-alipay-qr-modal-button" class="payment-qr" type="button" data-payment-method="alipay" aria-label="放大查看支付宝付款二维码">
+                <span class="payment-qr-frame">
+                  <img id="alipay-qr-image" alt="支付宝付款二维码" hidden />
+                  <span id="alipay-qr-placeholder">支付宝</span>
+                </span>
+                <strong>支付宝付款</strong>
+              </button>
+            </div>
+            <div class="commerce-copy">
+              <div class="payment-phone-card">
+                <span>重要：付款留言请填写手机号</span>
+                <input id="license-phone" type="tel" inputmode="numeric" maxlength="11" placeholder="输入接收验证码的手机号" />
+                <button id="copy-payment-note-button" type="button">复制付款留言</button>
+                <small id="payment-note-preview">付款留言：手机号未填写</small>
+              </div>
+              <div class="unlock-row">
+                <input id="unlock-code" type="text" inputmode="numeric" maxlength="6" placeholder="输入短信验证码" />
+                <button id="unlock-button" type="button">验证</button>
+              </div>
+              <label class="payment-note-box" for="payment-extra-note">
+                <span>备注文字框（可填）</span>
+                <textarea id="payment-extra-note" rows="2" placeholder="可填写微信昵称、付款时间或备用联系方式"></textarea>
+              </label>
+              <button id="export-report-button" class="commerce-button ghost" type="button">解锁后查看</button>
+              <p id="commerce-message" class="commerce-message"></p>
+            </div>
+          </div>
+        </section>
+
+        <nav class="result-tabs" aria-label="结果分类">
+          <button class="result-tab is-active" type="button" data-tab="overview">人生大事（小六壬）</button>
+          <button class="result-tab" type="button" data-tab="meihua">人生路标（梅花易数）</button>
+        </nav>
+
+        <div id="pro-content-shell" class="pro-content-shell">
+          <div id="pro-lock-overlay" class="pro-lock-overlay" role="note" hidden>
+            <span class="card-label">解锁超值完整版9.9元</span>
+            <strong>开通人生路标</strong>
+            <p>未开通时，人生大事（小六壬）和人生路标（梅花易数）会保留为毛玻璃预览。扫码付款并输入短信验证码后，本机立即解锁。</p>
+            <button id="open-pro-from-lock" class="commerce-button" type="button">解锁超值完整版9.9元</button>
+          </div>
+
+          <div class="tab-panels">
+          <section class="tab-panel is-active" data-panel="overview">
+            <div class="panel-scroll">
+              <section class="overview-section">
+                <div class="overview-heading">
+                  <span>01</span>
+                  <div>
+                    <strong>人生大事（小六壬） · 姓名与五行</strong>
+                  </div>
+                </div>
+
+                <article class="personal-profile-card">
+                  <div class="personal-profile-top">
+                    <div>
+                      <span class="card-label">出发坐标</span>
+                      <strong id="personal-profile-title">--</strong>
+                    </div>
+                    <span id="personal-profile-confidence" class="profile-confidence">--</span>
+                  </div>
+                  <div id="personal-pillars" class="personal-pillars"></div>
+                  <div id="personal-element-bars" class="personal-element-bars"></div>
+                </article>
+
+                <div class="card-grid two-columns personal-copy-grid">
+                  <article class="data-card">
+                    <span class="card-label">里程特点</span>
+                    <strong id="personal-element-focus">--</strong>
+                    <p id="personal-element-detail">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">相生相克与属象</span>
+                    <strong id="personal-relation-title">--</strong>
+                    <p id="personal-relation-detail">--</p>
+                  </article>
+                </div>
+
+                <article class="plain-language-card personal-plain-card">
+                  <span class="card-label">说人话 · 给自己的提醒</span>
+                  <strong id="personal-plain-title">--</strong>
+                  <p id="personal-plain-text">--</p>
+                </article>
+
+                <article class="plain-language-card name-element-card">
+                  <span class="card-label">姓名五行提示</span>
+                  <strong id="name-element-title">--</strong>
+                  <p id="name-element-detail">--</p>
+                  <div id="name-element-verdict" class="plain-action-list"></div>
+                </article>
+
+                <article class="plain-language-card destiny-profile-card">
+                  <span class="card-label">命运气运 · 民俗断语</span>
+                  <strong id="destiny-profile-title">--</strong>
+                  <p id="destiny-profile-text">--</p>
+                  <div id="destiny-profile-list" class="plain-action-list"></div>
+                </article>
+
+                <article class="zodiac-profile-card">
+                  <div class="zodiac-profile-heading">
+                    <div>
+                      <span class="card-label">生肖属象坐标</span>
+                      <strong id="zodiac-profile-name">--</strong>
+                    </div>
+                    <span id="zodiac-profile-symbol">--</span>
+                  </div>
+                  <div id="zodiac-profile-facts" class="zodiac-profile-facts"></div>
+                  <p id="zodiac-archetype" class="zodiac-archetype">--</p>
+                </article>
+
+                <div class="card-grid two-columns zodiac-relation-grid">
+                  <article class="data-card">
+                    <span class="card-label">五行相生相克</span>
+                    <strong id="zodiac-element-cycle">--</strong>
+                    <p id="zodiac-element-cycle-detail">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">六合与三合</span>
+                    <strong id="zodiac-harmony-title">--</strong>
+                    <p id="zodiac-harmony-detail">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">冲 · 害 · 破</span>
+                    <strong id="zodiac-tension-title">--</strong>
+                    <p id="zodiac-tension-detail">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">刑与流派差异</span>
+                    <strong id="zodiac-punishment-title">--</strong>
+                    <p id="zodiac-punishment-detail">--</p>
+                  </article>
+                </div>
+
+                <aside class="method-note">
+                  本栏展示出生年、月、日、时的干支五行轮廓；年柱和月柱按节气边界判定，节气交界日会计入所选时辰。完整出生坐标可在下方解锁查看。
+                </aside>
+              </section>
+
+              <section class="overview-section">
+                <div class="overview-heading">
+                  <span>02</span>
+                  <div>
+                    <strong>人生坐标 · 出生坐标</strong>
+                  </div>
+                </div>
+
+                <article class="bazi-plate-card">
+                  <div class="bazi-plate-heading">
+                    <div>
+                      <span class="card-label">出生坐标</span>
+                      <strong id="bazi-plate-title">--</strong>
+                    </div>
+                    <span id="bazi-plate-tag">--</span>
+                  </div>
+                  <div id="bazi-pillars" class="bazi-pillars"></div>
+                  <p id="bazi-plate-note" class="bazi-plate-note">--</p>
+                </article>
+
+                <div class="card-grid two-columns bazi-analysis-grid">
+                  <article class="data-card">
+                    <span class="card-label">自我节奏</span>
+                    <strong id="bazi-day-master">--</strong>
+                    <p id="bazi-day-master-detail">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">关系结构</span>
+                    <strong id="bazi-ten-god-title">--</strong>
+                    <p id="bazi-ten-god-detail">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">能量平衡</span>
+                    <strong id="bazi-balance-title">--</strong>
+                    <p id="bazi-balance-detail">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">长期主题</span>
+                    <strong id="bazi-pattern-title">--</strong>
+                    <p id="bazi-pattern-detail">--</p>
+                  </article>
+                </div>
+
+                <article class="wide-card bazi-luck-card">
+                  <span class="card-label">阶段与年份</span>
+                  <strong id="bazi-luck-title">--</strong>
+                  <p id="bazi-luck-detail">--</p>
+                  <div id="bazi-luck-list" class="tag-list bazi-luck-list"></div>
+                </article>
+
+                <article class="plain-language-card bazi-advice-card">
+                  <span class="card-label">事业 · 感情 · 健康建议</span>
+                  <strong id="bazi-advice-title">--</strong>
+                  <div id="bazi-advice-list" class="plain-action-list"></div>
+                </article>
+
+                <aside class="method-note">
+                  排盘规则：以节气为年、月边界，月柱按立春起寅月，采用北京时间与所选时辰中点。农历生日会先换算为阳历；节气落在所选时辰内时需补精确分钟校准。
+                </aside>
+              </section>
+
+              <section class="overview-section">
+                <div class="overview-heading">
+                  <span>03</span>
+                  <div>
+                    <strong>个人健康与饮食</strong>
+                  </div>
+                </div>
+
+                <article class="health-boundary-card">
+                  <span class="card-label">生活方式依据</span>
+                  <strong id="health-basis-title">年龄与生活方式提醒</strong>
+                  <p id="health-basis-text">--</p>
+                </article>
+
+                <div class="card-grid two-columns health-grid">
+                  <article class="data-card">
+                    <span class="card-label">饮食应限制</span>
+                    <strong id="health-food-title">--</strong>
+                    <p id="health-food-detail">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">年龄提示</span>
+                    <strong id="health-age-title">--</strong>
+                    <p id="health-age-detail">--</p>
+                  </article>
+                </div>
+
+                <article class="wide-card">
+                  <span class="card-label">需要留意的普遍风险因素</span>
+                  <div id="health-risk-list" class="tag-list health-risk-list"></div>
+                </article>
+
+                <article class="plain-language-card health-action-card">
+                  <span class="card-label">现在可以做</span>
+                  <strong>把健康判断交给真实数据</strong>
+                  <div id="health-action-list" class="plain-action-list"></div>
+                </article>
+
+                <aside class="method-note health-source-note">
+                  资料来源：WHO 健康饮食原则与常规预防建议；本栏结合年龄段生成饮食、活动与体检提醒。
+                </aside>
+              </section>
+
+              <section class="overview-section luck-value-section">
+                <div class="overview-heading">
+                  <span>04</span>
+                  <div>
+                    <strong>当下幸运值</strong>
+                  </div>
+                </div>
+
+                <div class="signal-card primary-signal daily-fortune-card">
+                  <div class="signal-topline">
+                    <span>当下幸运值</span>
+                    <strong id="day-tone">平和</strong>
+                  </div>
+                  <div class="score-track"><i id="score-bar"></i></div>
+                  <div class="fortune-grid" aria-label="当下幸运值提示">
+                    <div>
+                      <span>宜</span>
+                      <strong id="fortune-good">--</strong>
+                    </div>
+                    <div>
+                      <span>慎</span>
+                      <strong id="fortune-risk">--</strong>
+                    </div>
+                    <div>
+                      <span>缓</span>
+                      <strong id="fortune-avoid">--</strong>
+                    </div>
+                    <div>
+                      <span>助</span>
+                      <strong id="fortune-blessing">--</strong>
+                    </div>
+                  </div>
+                  <p id="day-guidance">宜放慢节奏，观察变化，在确定之后行动。</p>
+                </div>
+
+                <div class="card-grid two-columns">
+                  <article class="data-card">
+                    <span class="card-label">传统历法</span>
+                    <strong id="lunar-date">--</strong>
+                    <p id="ganzhi-date">--</p>
+                  </article>
+                  <article class="data-card accent-card">
+                    <span class="card-label">幸运信号</span>
+                    <strong id="six-ren-name">--</strong>
+                    <p id="six-ren-text">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">与你的关系节奏</span>
+                    <strong id="zodiac-relation">--</strong>
+                    <p id="zodiac-text">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">今天的提醒</span>
+                    <strong id="rhythm-title">--</strong>
+                    <p id="rhythm-text">--</p>
+                  </article>
+                </div>
+
+                <article class="wide-card sixren-complete-card">
+                  <span class="card-label">小六壬全断</span>
+                  <strong id="six-ren-complete-title">--</strong>
+                  <p id="six-ren-complete-detail">--</p>
+                  <div class="oracle-grid">
+                    <div><span>求财</span><strong id="six-ren-wealth">--</strong></div>
+                    <div><span>失物</span><strong id="six-ren-lost">--</strong></div>
+                    <div><span>行人</span><strong id="six-ren-travel">--</strong></div>
+                    <div><span>人事</span><strong id="six-ren-people">--</strong></div>
+                    <div><span>病讼</span><strong id="six-ren-health">--</strong></div>
+                    <div><span>时机</span><strong id="six-ren-timing">--</strong></div>
+                  </div>
+                  <div id="six-ren-actions" class="plain-action-list"></div>
+                </article>
+              </section>
+
+              <section class="overview-section">
+                <div class="overview-heading">
+                  <span>05</span>
+                  <div>
+                    <strong>人生时钟</strong>
+                  </div>
+                </div>
+
+                <article class="wide-card">
+                  <div class="wide-card-heading">
+                    <span class="card-label">干支 · 五行</span>
+                    <strong id="day-pillar">--</strong>
+                  </div>
+                  <div class="element-display">
+                    <span id="day-element">--</span>
+                    <div>
+                      <strong id="element-theme">--</strong>
+                      <p id="element-description">--</p>
+                    </div>
+                  </div>
+                </article>
+
+                <div class="card-grid two-columns">
+                  <article class="data-card list-card">
+                    <span class="card-label">宜</span>
+                    <div id="favorable-actions" class="tag-list"></div>
+                  </article>
+                  <article class="data-card list-card">
+                    <span class="card-label">忌</span>
+                    <div id="caution-actions" class="tag-list caution-tags"></div>
+                  </article>
+                </div>
+
+                <article class="wide-card hour-card">
+                  <span class="card-label">十二时辰</span>
+                  <div id="hour-timeline" class="hour-timeline"></div>
+                </article>
+              </section>
+
+              <section class="overview-section">
+                <div class="overview-heading">
+                  <span>06</span>
+                  <div>
+                    <strong>人生路标（梅花易数）</strong>
+                  </div>
+                </div>
+
+                <article class="hexagram-card">
+                  <div class="hexagram-copy">
+                    <span class="card-label">人生路标（梅花易数） · 日期时辰提示</span>
+                    <strong id="hexagram-name">--</strong>
+                    <p id="hexagram-detail">--</p>
+                  </div>
+                  <div id="hexagram-visual" class="hexagram-visual" aria-label="六爻卦象"></div>
+                </article>
+
+                <div class="card-grid two-columns">
+                  <article class="data-card">
+                    <span class="card-label">上卦</span>
+                    <strong id="upper-trigram">--</strong>
+                    <p id="upper-trigram-detail">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">下卦</span>
+                    <strong id="lower-trigram">--</strong>
+                    <p id="lower-trigram-detail">--</p>
+                  </article>
+                </div>
+
+                <article class="wide-card">
+                  <span class="card-label">动爻与变卦</span>
+                  <strong id="changing-line">--</strong>
+                  <p id="changed-hexagram">--</p>
+                </article>
+              </section>
+
+              <section class="overview-section">
+                <div class="overview-heading">
+                  <span>07</span>
+                  <div>
+                    <strong>方位</strong>
+                  </div>
+                </div>
+
+                <article class="compass-card">
+                  <div class="compass">
+                    <span class="north">北</span>
+                    <span class="east">东</span>
+                    <span class="south">南</span>
+                    <span class="west">西</span>
+                    <i id="compass-needle"></i>
+                    <b>中</b>
+                  </div>
+                  <div class="compass-copy">
+                    <span class="card-label">时序方位</span>
+                    <strong id="direction-name">--</strong>
+                    <p id="direction-text">--</p>
+                  </div>
+                </article>
+
+                <div class="card-grid two-columns">
+                  <article class="data-card">
+                    <span class="card-label">相生方位 · 联想</span>
+                    <strong id="support-direction">--</strong>
+                    <p id="support-direction-text">--</p>
+                  </article>
+                  <article class="data-card">
+                    <span class="card-label">日支方位 · 联想</span>
+                    <strong id="observe-direction">--</strong>
+                    <p id="observe-direction-text">--</p>
+                  </article>
+                </div>
+
+                <aside class="culture-disclaimer">
+                  <strong>算法与边界说明</strong>
+                  <p>
+                    小六壬采用“大安起正月、月上起日、日上起时”的六位循环；日期梅花卦采用年支、农历月日和时支取数。
+                    页面中的百分制是应用内解释层：人生大事（小六壬）会把幸运信号、日期路标、生肖地支关系与人生路标（梅花易数）模块分数协调为同一个“幸运值”。
+                    八字排盘使用通用节气公式和北京时间，未做出生地经度、夏令时或真太阳时校正；不同流派在换日、格局与用神上会有差异。
+                    健康内容只作为生活方式提醒。所有结果用于传统文化体验与自我整理，不具有科学预测效力，也不能代替医疗、法律、投资或其他专业判断。
+                  </p>
+                </aside>
+              </section>
+            </div>
+          </section>
+
+          <section class="tab-panel" data-panel="meihua" hidden>
+            <div class="panel-scroll meihua-panel">
+              <section class="meihua-intro">
+                <h2>人生路标（梅花易数）数字提示</h2>
+                <p>
+                  当前日期与时辰会自动生成路标数字。也可以输入你此刻想到的任意数字，
+                  配合所问事项查看当前局面、内在过程、前方变化与体用生克。它不替你决定人生，只帮你把问题看得更清楚一点。
+                </p>
+              </section>
+
+              <section class="meihua-form-card">
+                <div class="meihua-form-grid">
+                  <label class="meihua-number-field">
+                    <span class="sr-only">输入任意数字</span>
+                    <input id="meihua-number" type="text" inputmode="numeric" maxlength="18" placeholder="输入任意数字" />
+                  </label>
+                  <label>
+                    <span>所问事项</span>
+                    <select id="meihua-topic">
+                      <option value="general">综合事项</option>
+                      <option value="business">项目 / 合作 / 签约</option>
+                      <option value="money">财运 / 回款 / 投资</option>
+                      <option value="career">事业 / 工作 / 职位</option>
+                      <option value="love">感情 / 婚姻 / 人际</option>
+                      <option value="travel">出行 / 办事 / 拜访</option>
+                      <option value="health">健康 / 状态 / 压力</option>
+                    </select>
+                  </label>
+                  <label class="meihua-question-field">
+                    <span>问题描述，可不填</span>
+                    <textarea
+                      id="meihua-question"
+                      rows="2"
+                      placeholder="专注想清楚一件事，再输入此刻想到的数字"
+                    ></textarea>
+                  </label>
+                </div>
+                <p id="meihua-topic-brief" class="meihua-topic-brief">
+                  从整体趋势、机会、阻力、行动节奏、人际协同和风险提醒六个角度综合分析。
+                </p>
+                <strong id="meihua-date-seed" hidden></strong>
+                <button id="meihua-calculate" class="meihua-calculate" type="button">
+                  重新看路标
+                </button>
+                <p id="meihua-error" class="meihua-error" role="alert"></p>
+              </section>
+
+              <section class="meihua-result">
+                <div class="meihua-result-grid">
+                  <article class="meihua-gua-card">
+                    <span>当前路标 · 当前局面</span>
+                    <strong id="professional-main-name">--</strong>
+                    <small id="professional-main-detail">--</small>
+                  </article>
+                  <article class="meihua-gua-card">
+                    <span>内在节奏 · 内部过程</span>
+                    <strong id="professional-inner-name">--</strong>
+                    <small id="professional-inner-detail">--</small>
+                  </article>
+                  <article class="meihua-gua-card">
+                    <span>前方路标 · 后续趋势</span>
+                    <strong id="professional-changed-name">--</strong>
+                    <small id="professional-changed-detail">--</small>
+                  </article>
+                </div>
+
+                <article class="professional-core">
+                  <div>
+                    <span class="card-label">六爻路标</span>
+                    <div id="professional-hexagram" class="hexagram-visual professional-hexagram"></div>
+                  </div>
+                  <div>
+                    <span class="card-label">体用关系</span>
+                    <strong id="professional-relation">--</strong>
+                    <p id="professional-body-use">--</p>
+                  </div>
+                  <div class="professional-grade">
+                    <span class="card-label">幸运值参考</span>
+                    <strong id="professional-grade">--</strong>
+                    <p id="professional-score">--</p>
+                  </div>
+                </article>
+
+                <article class="professional-copy-card">
+                  <span class="card-label">路标提示</span>
+                  <strong id="professional-title">--</strong>
+                  <p id="professional-judgment">--</p>
+                </article>
+
+                <article class="professional-copy-card meihua-personal-card">
+                  <span class="card-label">个人入卦</span>
+                  <strong id="professional-personal-title">--</strong>
+                  <p id="professional-personal-text">--</p>
+                  <div id="professional-personal-points" class="plain-action-list"></div>
+                </article>
+
+                <article class="professional-copy-card">
+                  <span class="card-label">行动取法</span>
+                  <div id="professional-advice" class="professional-advice"></div>
+                </article>
+
+                <article class="professional-copy-card meihua-complete-card">
+                  <span class="card-label">梅花易数全断</span>
+                  <strong id="meihua-complete-title">--</strong>
+                  <div id="meihua-complete-list" class="plain-action-list"></div>
+                </article>
+
+                <article class="plain-language-card meihua-plain-card">
+                  <span class="card-label">说人话 · 同行建议</span>
+                  <strong id="professional-plain-title">--</strong>
+                  <p id="professional-plain-text">--</p>
+                  <div id="professional-plain-actions" class="plain-action-list"></div>
+                </article>
+
+                <aside class="culture-disclaimer">
+                  <strong>路标算法说明</strong>
+                  <p>
+                    日期卦依“年月日为上卦、年月日加时为下卦、总数除六取动爻”；
+                    数字卦采用数字分组法。动爻所在经卦为用卦，无动爻者为体卦。
+                    本栏的“路标分”会与人生大事（小六壬）的“幸运值”同步显示；综合分用于跨栏目阅读，路标分用于当前局面、体用、动爻与个人出生资料的内部比较。
+                  </p>
+                </aside>
+              </section>
+              </div>
+          </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="qr-modal" class="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title" hidden>
+      <div class="qr-modal-backdrop" data-close-qr></div>
+      <div class="qr-modal-card">
+        <button id="close-qr-modal" class="qr-modal-close" type="button" aria-label="关闭二维码">×</button>
+        <span id="qr-modal-label" class="card-label">微信付款二维码</span>
+        <strong id="qr-modal-title">扫码支付 ¥9.9</strong>
+        <img id="qr-modal-image" src="payment/wechat-qr.jpg" alt="微信付款二维码大图" />
+        <p id="qr-modal-help">请保存二维码到相册并用微信扫码付款；付款留言必须写手机号，我会按留言手机号短信发送验证码。</p>
+        <div class="qr-modal-actions">
+          <button id="download-qr-button" class="commerce-button ghost" type="button">保存到相册</button>
+          <a id="open-qr-image-link" class="commerce-button ghost" href="payment/wechat-qr.jpg" download="rensheng-lubiao-wechat-qr.jpg" target="_blank" rel="noopener">打开/保存原图</a>
+          <button id="open-payment-app-button" class="commerce-button ghost" type="button">保存后打开微信</button>
+          <button id="confirm-scan-button" class="commerce-button" type="button">复制付款留言</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="jie-boundaries.js?v=40"></script>
+    <script src="script.js?v=40"></script>
+  </body>
+</html>
